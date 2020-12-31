@@ -24,6 +24,7 @@ EXPORT_API(void)        THSNN_Module_save(const NNModule module, const char * lo
 EXPORT_API(NNModule)    THSNN_Module_load(const char * location, const char * name);
 EXPORT_API(void)        THSNN_Module_register_module(const NNModule module, const char* name, const NNModule submodule);
 EXPORT_API(void)        THSNN_Module_dispose(const NNModule module);
+EXPORT_API(void)        THSNN_Module_to(const NNModule module, torch::Device device, bool non_blocking = false);
 
 EXPORT_API(void)        THSNN_AnyModule_dispose(const NNAnyModule module);
 //EXPORT_API(NNModule)    THSNN_AnyModule_get(const NNAnyModule module);

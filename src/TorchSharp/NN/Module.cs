@@ -247,6 +247,15 @@ namespace TorchSharp.NN
             Torch.CheckForErrors ();
             return res;
         }
+
+        [DllImport("LibTorchSharp")]
+        private static extern void THSNN_Module_to(HType module, Device device, bool non_blocking = false);
+
+        public virtual void To(Device device, bool nonBlocking = false)
+        {
+            THSNN_Module_to(handle, device, nonBlocking);
+            Torch.CheckForErrors();
+        }
     }
 
     internal class BoxedModule : IDisposable

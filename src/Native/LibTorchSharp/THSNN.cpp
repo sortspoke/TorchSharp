@@ -107,6 +107,21 @@ void THSNN_Module_zero_grad(const NNModule module)
     (*module)->zero_grad();
 }
 
+void THSNN_Module_to(const NNModule module, torch::Device device, torch::Dtype dtype, bool non_blocking)
+{
+    (*module)->to(device, dtype, non_blocking);
+}
+
+void THSNN_Module_to(const NNModule module, torch::Device device, bool non_blocking)
+{
+    (*module)->to(device, non_blocking);
+}
+
+void THSNN_Module_to(const NNModule module, torch::Dtype dtype, bool non_blocking)
+{
+    (*module)->to(dtype, non_blocking);
+}
+
 // Wrapper class used to enable .NET definitions ot new modules describing parameters and with delegates to implement forward function
 class CustomModule : public torch::nn::Module
 {
