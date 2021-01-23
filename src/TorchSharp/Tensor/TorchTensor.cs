@@ -89,12 +89,10 @@ namespace TorchSharp.Tensor
         /// </summary>
         public Span<T> Data<T>()
         {
-            if (NumberOfElements > int.MaxValue)
-            {
+            if (NumberOfElements > int.MaxValue) {
                 throw new ArgumentException("Span only supports up to int.MaxValue elements.");
             }
-            unsafe
-            {
+            unsafe {
                 var res = THSTensor_data(handle);
                 if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
                 // NOTE: there is no safety here.
@@ -167,16 +165,13 @@ namespace TorchSharp.Tensor
         private static extern IntPtr THSTensor_set1(IntPtr handle, long i1, IntPtr value);
 
         [IndexerName("TensorItems")]
-        public TorchTensor this[long i1]
-        {
-            get
-            {
+        public TorchTensor this[long i1] {
+            get {
                 var res = THSTensor_get1(handle, i1);
                 if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
                 return new TorchTensor(res);
             }
-            set
-            {
+            set {
                 THSTensor_set1(handle, i1, value.ToScalar().Handle);
                 Torch.CheckForErrors();
             }
@@ -189,16 +184,13 @@ namespace TorchSharp.Tensor
         private static extern IntPtr THSTensor_set2(IntPtr handle, long i1, long i2, IntPtr value);
 
         [IndexerName("TensorItems")]
-        public TorchTensor this[long i1, long i2]
-        {
-            get
-            {
+        public TorchTensor this[long i1, long i2] {
+            get {
                 var res = THSTensor_get2(handle, i1, i2);
                 if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
                 return new TorchTensor(res);
             }
-            set
-            {
+            set {
                 THSTensor_set2(handle, i1, i2, value.ToScalar().Handle);
                 Torch.CheckForErrors();
             }
@@ -211,17 +203,14 @@ namespace TorchSharp.Tensor
         private static extern IntPtr THSTensor_set3(IntPtr handle, long i1, long i2, long i3, IntPtr value);
 
         [IndexerName("TensorItems")]
-        public TorchTensor this[long i1, long i2, long i3]
-        {
-            get
-            {
+        public TorchTensor this[long i1, long i2, long i3] {
+            get {
                 var res = THSTensor_get3(handle, i1, i2, i3);
                 if (res == IntPtr.Zero)
                     Torch.CheckForErrors();
                 return new TorchTensor(res);
             }
-            set
-            {
+            set {
                 THSTensor_set3(handle, i1, i2, i3, value.ToScalar().Handle);
                 Torch.CheckForErrors();
             }
@@ -234,17 +223,14 @@ namespace TorchSharp.Tensor
         private static extern IntPtr THSTensor_set4(IntPtr handle, long i1, long i2, long i3, long i4, IntPtr value);
 
         [IndexerName("TensorItems")]
-        public TorchTensor this[long i1, long i2, long i3, long i4]
-        {
-            get
-            {
+        public TorchTensor this[long i1, long i2, long i3, long i4] {
+            get {
                 var res = THSTensor_get4(handle, i1, i2, i3, i4);
                 if (res == IntPtr.Zero)
                     Torch.CheckForErrors();
                 return new TorchTensor(res);
             }
-            set
-            {
+            set {
                 THSTensor_set4(handle, i1, i2, i3, i4, value.ToScalar().Handle);
                 Torch.CheckForErrors();
             }
@@ -299,10 +285,8 @@ namespace TorchSharp.Tensor
         [return: MarshalAs(UnmanagedType.LPStr)]
         private static extern string THSTensor_device_str(IntPtr handle);
 
-        public string DeviceString
-        {
-            get
-            {
+        public string DeviceString {
+            get {
                 var res = THSTensor_device_str(handle);
                 if (res == null)
                     Torch.CheckForErrors();
@@ -338,10 +322,8 @@ namespace TorchSharp.Tensor
         [DllImport("LibTorchSharp")]
         private static extern bool THSTensor_is_sparse(IntPtr handle);
 
-        public bool IsSparse
-        {
-            get
-            {
+        public bool IsSparse {
+            get {
                 var res = THSTensor_is_sparse(handle);
                 Torch.CheckForErrors();
                 return res;
@@ -451,10 +433,8 @@ namespace TorchSharp.Tensor
         ///     for single-dimension arrays, where the dimension is the value of the
         ///     first element.   And so on.
         /// </remarks>
-        public long[] Shape
-        {
-            get
-            {
+        public long[] Shape {
+            get {
                 var dims = new long[Dimensions];
                 for (var i = 0; i < dims.Length; i++)
                     dims[i] = GetTensorDimension(i);
@@ -569,10 +549,8 @@ namespace TorchSharp.Tensor
 
         public TorchTensor Reshape(params long[] shape)
         {
-            unsafe
-            {
-                fixed (long* pshape = shape)
-                {
+            unsafe {
+                fixed (long* pshape = shape) {
                     var res = THSTensor_reshape(handle, (IntPtr)pshape, shape.Length);
                     if (res == IntPtr.Zero)
                         Torch.CheckForErrors();
@@ -627,10 +605,8 @@ namespace TorchSharp.Tensor
 
         public TorchTensor View(params long[] shape)
         {
-            unsafe
-            {
-                fixed (long* pshape = shape)
-                {
+            unsafe {
+                fixed (long* pshape = shape) {
                     var res = THSTensor_view(handle, (IntPtr)pshape, shape.Length);
                     if (res == IntPtr.Zero)
                         Torch.CheckForErrors();
@@ -2572,8 +2548,7 @@ namespace TorchSharp.Tensor
         {
             IntPtr[] ptrArray;
 
-            using (var pa = new PinnedArray<IntPtr>())
-            {
+            using (var pa = new PinnedArray<IntPtr>()) {
                 THSTensor_topk(handle, pa.CreateArray, k, dimension, largest, sorted);
                 Torch.CheckForErrors();
                 ptrArray = pa.Array;
@@ -2589,8 +2564,7 @@ namespace TorchSharp.Tensor
         {
             IntPtr[] ptrArray;
 
-            using (var pa = new PinnedArray<IntPtr>())
-            {
+            using (var pa = new PinnedArray<IntPtr>()) {
                 THSTensor_unbind(handle, pa.CreateArray, dimension);
                 Torch.CheckForErrors();
                 ptrArray = pa.Array;
@@ -2623,12 +2597,9 @@ namespace TorchSharp.Tensor
         {
             IntPtr[] ptrArray;
 
-            using (var pa = new PinnedArray<IntPtr>())
-            {
-                unsafe
-                {
-                    fixed (long* psizes = sizes)
-                    {
+            using (var pa = new PinnedArray<IntPtr>()) {
+                unsafe {
+                    fixed (long* psizes = sizes) {
                         THSTensor_split_with_sizes(handle, pa.CreateArray, (IntPtr)psizes, sizes.Length, dimension);
                         Torch.CheckForErrors();
                     }
@@ -2668,8 +2639,7 @@ namespace TorchSharp.Tensor
         {
             IntPtr[] ptrArray;
 
-            using (var pa = new PinnedArray<IntPtr>())
-            {
+            using (var pa = new PinnedArray<IntPtr>()) {
                 THSTensor_max_along_dimension(handle, pa.CreateArray, dimension, keepDim);
                 Torch.CheckForErrors();
                 ptrArray = pa.Array;
@@ -3092,10 +3062,8 @@ namespace TorchSharp.Tensor
         /// </summary>
         public TorchTensor Sum(long[] dimensions, bool keepDimension = false, ScalarType? type = null)
         {
-            unsafe
-            {
-                fixed (long* pdims = dimensions)
-                {
+            unsafe {
+                fixed (long* pdims = dimensions) {
                     var res = THSTensor_sum_along_dimensions(handle, (IntPtr)pdims, dimensions.Length, keepDimension, type.HasValue, (sbyte)type.GetValueOrDefault());
                     if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
                     return new TorchTensor(res);
@@ -3197,10 +3165,8 @@ namespace TorchSharp.Tensor
         /// </summary>
         public TorchTensor Expand(long[] sizes, bool isImplicit = false)
         {
-            unsafe
-            {
-                fixed (long* psizes = sizes)
-                {
+            unsafe {
+                fixed (long* psizes = sizes) {
                     var res = THSTensor_expand(handle, (IntPtr)psizes, sizes.Length, isImplicit);
                     if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
                     return new TorchTensor(res);
@@ -3371,10 +3337,8 @@ namespace TorchSharp.Tensor
         /// </summary>
         public TorchTensor Flip(long[] sizes)
         {
-            unsafe
-            {
-                fixed (long* psizes = sizes)
-                {
+            unsafe {
+                fixed (long* psizes = sizes) {
                     var res = THSTensor_flip(handle, (IntPtr)psizes, sizes.Length);
                     if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
                     return new TorchTensor(res);
@@ -3422,20 +3386,18 @@ namespace TorchSharp.Tensor
                 IntPtr dilation, int dilationLength,
                 long groups);
 
-        public TorchTensor Conv1D(TorchTensor weight, TorchTensor? bias = null, 
+        public TorchTensor Conv1D(TorchTensor weight, TorchTensor? bias = null,
             long? stride = null,
             long? padding = null,
             long? dilation = null,
             long groups = 1)
         {
             var strides = new long[] { stride ?? 1 };
-            var paddingArray = new long[] { padding ?? 0 }; 
+            var paddingArray = new long[] { padding ?? 0 };
             var dilationArray = new long[] { dilation ?? 1 };
             var biasHandle = (bias is null ? IntPtr.Zero : bias.Handle);
-            unsafe
-            {
-                fixed (long* pstrides = strides, ppadding = paddingArray, pdilation = dilationArray)
-                {
+            unsafe {
+                fixed (long* pstrides = strides, ppadding = paddingArray, pdilation = dilationArray) {
                     var res =
                         THSTensor_conv1d(handle, weight.Handle, biasHandle,
                             (IntPtr)pstrides, strides.Length,
@@ -3466,10 +3428,8 @@ namespace TorchSharp.Tensor
             padding = (padding == null) ? new long[] { 0 } : padding;
             dilation = (dilation == null) ? new long[] { 1 } : dilation;
             var biasHandle = (bias is null ? IntPtr.Zero : bias.Handle);
-            unsafe
-            {
-                fixed (long* pstrides = strides, ppadding = padding, pdilation = dilation)
-                {
+            unsafe {
+                fixed (long* pstrides = strides, ppadding = padding, pdilation = dilation) {
                     var res =
                         THSTensor_conv2d(handle, weight.Handle, biasHandle,
                             (IntPtr)pstrides, strides.Length,
@@ -3499,13 +3459,11 @@ namespace TorchSharp.Tensor
             padding = (padding == null) ? new long[] { 0 } : padding;
             dilation = (dilation == null) ? new long[] { 1 } : dilation;
             var biasHandle = (bias is null ? IntPtr.Zero : bias.Handle);
-            unsafe
-            {
-                fixed (long* pstrides = strides, ppadding = padding, pdilation = dilation)
-                {
+            unsafe {
+                fixed (long* pstrides = strides, ppadding = padding, pdilation = dilation) {
                     var res =
                         THSTensor_conv3d(handle, weight.Handle, biasHandle,
-                            (IntPtr)pstrides, strides.Length, 
+                            (IntPtr)pstrides, strides.Length,
                             (IntPtr)ppadding, padding.Length,
                             (IntPtr)pdilation, dilation.Length,
                             groups);
@@ -3535,10 +3493,8 @@ namespace TorchSharp.Tensor
             var outputPaddings = new long[] { outputPadding ?? 0 };
             var dilations = new long[] { dilation ?? 1 };
             var biasHandle = (bias is null ? IntPtr.Zero : bias.Handle);
-            unsafe
-            {
-                fixed (long* pstrides = strides, ppadding = paddings, poutputPadding = outputPaddings, pdilation = dilations)
-                {
+            unsafe {
+                fixed (long* pstrides = strides, ppadding = paddings, poutputPadding = outputPaddings, pdilation = dilations) {
                     var res =
                         THSTensor_conv_transpose1d(handle, weight.Handle, biasHandle,
                             (IntPtr)pstrides, strides.Length,
@@ -3572,10 +3528,8 @@ namespace TorchSharp.Tensor
             outputPadding = (outputPadding == null) ? new long[] { 0, 0 } : outputPadding;
             dilation = (dilation == null) ? new long[] { 1, 1 } : dilation;
             var biasHandle = (bias is null ? IntPtr.Zero : bias.Handle);
-            unsafe
-            {
-                fixed (long* pstrides = strides, ppadding = padding, poutputPadding = outputPadding, pdilation = dilation)
-                {
+            unsafe {
+                fixed (long* pstrides = strides, ppadding = padding, poutputPadding = outputPadding, pdilation = dilation) {
                     var res =
                         THSTensor_conv_transpose2d(handle, weight.Handle, biasHandle,
                             (IntPtr)pstrides, strides.Length,
@@ -3609,10 +3563,8 @@ namespace TorchSharp.Tensor
             outputPadding = (outputPadding == null) ? new long[] { 0, 0, 0 } : outputPadding;
             dilation = (dilation == null) ? new long[] { 1, 1, 1 } : dilation;
             var biasHandle = (bias is null ? IntPtr.Zero : bias.Handle);
-            unsafe
-            {
-                fixed (long* pstrides = strides, ppadding = padding, poutputPadding = outputPadding, pdilation = dilation)
-                {
+            unsafe {
+                fixed (long* pstrides = strides, ppadding = padding, poutputPadding = outputPadding, pdilation = dilation) {
                     var res =
                         THSTensor_conv_transpose3d(handle, weight.Handle, biasHandle,
                             (IntPtr)pstrides, strides.Length,
@@ -3641,12 +3593,10 @@ namespace TorchSharp.Tensor
             var strides = new long[] { stride ?? 1 };
             var paddings = new long[] { padding ?? 0 };
             var dilations = new long[] { dilation ?? 1 };
-            unsafe
-            {
-                fixed (long* pkernelSize = kernelSizes, pstrides = strides, ppadding = paddings, pdilation = dilations)
-                {
+            unsafe {
+                fixed (long* pkernelSize = kernelSizes, pstrides = strides, ppadding = paddings, pdilation = dilations) {
                     var res =
-                        THSTensor_max_pool1d(handle, 
+                        THSTensor_max_pool1d(handle,
                             (IntPtr)pkernelSize, kernelSizes.Length,
                             (IntPtr)pstrides, strides.Length,
                             (IntPtr)ppadding, paddings.Length,
@@ -3707,10 +3657,8 @@ namespace TorchSharp.Tensor
             strides = strides ?? kernelSize.Select(x => 1L).ToArray();
             padding = padding ?? kernelSize.Select(x => 0L).ToArray();
             dilation = dilation ?? kernelSize.Select(x => 1L).ToArray();
-            unsafe
-            {
-                fixed (long* pkernelSize = kernelSize, pstrides = strides, ppadding = padding, pdilation = dilation)
-                {
+            unsafe {
+                fixed (long* pkernelSize = kernelSize, pstrides = strides, ppadding = padding, pdilation = dilation) {
                     var res =
                         THSTensor_max_pool2d(handle,
                             (IntPtr)pkernelSize, kernelSize.Length,
@@ -3772,10 +3720,8 @@ namespace TorchSharp.Tensor
             strides = strides ?? kernelSize.Select(x => 1L).ToArray();
             padding = padding ?? kernelSize.Select(x => 0L).ToArray();
             dilation = dilation ?? kernelSize.Select(x => 1L).ToArray();
-            unsafe
-            {
-                fixed (long* pkernelSize = kernelSize, pstrides = strides, ppadding = padding, pdilation = dilation)
-                {
+            unsafe {
+                fixed (long* pkernelSize = kernelSize, pstrides = strides, ppadding = padding, pdilation = dilation) {
                     var res =
                         THSTensor_max_pool3d(handle,
                             (IntPtr)pkernelSize, kernelSize.Length,
@@ -4135,7 +4081,7 @@ namespace TorchSharp.Tensor
 
         public TorchTensor UpSampleNearest2D(long[]? outputSizes = null, double[]? scaleFactors = null)
         {
-            var outputSizesLength = outputSizes == null ?  0 : outputSizes.Length;
+            var outputSizesLength = outputSizes == null ? 0 : outputSizes.Length;
             var scaleFactorsLength = scaleFactors == null ? 0 : scaleFactors.Length;
             unsafe {
                 fixed (long* poutputSizes = outputSizes) {
@@ -4401,8 +4347,7 @@ namespace TorchSharp.Tensor
                 return "[]";
 
             var sb = new StringBuilder("[");
-            for (var i = 0; i < n; i++)
-            {
+            for (var i = 0; i < n; i++) {
                 sb.Append(GetTensorDimension(i));
                 if (i + 1 < n)
                     sb.Append("x");
@@ -4410,17 +4355,41 @@ namespace TorchSharp.Tensor
 
             sb.Append("]");
             sb.Append($", device = {DeviceString}");
+
+            if (Type == ScalarType.Float32) {
+                if (n == 1) {
+                    sb.AppendLine();
+                    sb.Append("[");
+                    for (int j = 0; j < Math.Min(10, GetTensorDimension(0)); j++) {
+                        sb.AppendFormat($"{this[j].ToSingle():0.##},");
+                    }
+                    sb.Length = sb.Length - 1;
+                    sb.Append("]");
+                } else if (n == 2) {
+                    for (var i = 0; i < GetTensorDimension(0); i++) {
+                        sb.AppendLine();
+                        sb.Append("[");
+                        for (int j = 0; j < Math.Min(10, GetTensorDimension(1)); j++) {
+                            sb.AppendFormat($"{this[i, j].ToSingle():0.##},");
+                        }
+                        sb.Length = sb.Length - 1;
+                        sb.Append("]");
+                    }
+                }
+            }
+
+
             return sb.ToString();
         }
 
-        public static explicit operator float (TorchTensor value) => value.ToSingle();
-        public static explicit operator double (TorchTensor value) => value.ToDouble();
-        public static explicit operator sbyte (TorchTensor value) => value.ToSByte();
-        public static explicit operator byte (TorchTensor value) => value.ToByte();
-        public static explicit operator short (TorchTensor value) => value.ToInt16();
-        public static explicit operator int (TorchTensor value) => value.ToInt32();
-        public static explicit operator long (TorchTensor value) => value.ToInt64();
-        public static explicit operator bool (TorchTensor value) => value.ToBoolean();
+        public static explicit operator float(TorchTensor value) => value.ToSingle();
+        public static explicit operator double(TorchTensor value) => value.ToDouble();
+        public static explicit operator sbyte(TorchTensor value) => value.ToSByte();
+        public static explicit operator byte(TorchTensor value) => value.ToByte();
+        public static explicit operator short(TorchTensor value) => value.ToInt16();
+        public static explicit operator int(TorchTensor value) => value.ToInt32();
+        public static explicit operator long(TorchTensor value) => value.ToInt64();
+        public static explicit operator bool(TorchTensor value) => value.ToBoolean();
     }
 
     public enum ScalarType : sbyte
@@ -4449,52 +4418,42 @@ namespace TorchSharp.Tensor
         {
             var array = doCopy ? (T[])rawArray.Clone() : rawArray;
 
-            switch (true)
-            {
-                case bool _ when typeof(T) == typeof(byte):
-                    {
-                        return ByteTensor.From(array as byte[], dimensions, requiresGrad); ;
-                    }
-                case bool _ when typeof(T) == typeof(sbyte):
-                    {
-                        return Int8Tensor.From(array as sbyte[], dimensions, requiresGrad); ;
-                    }
-                case bool _ when typeof(T) == typeof(short):
-                    {
-                        return Int16Tensor.From(array as short[], dimensions, requiresGrad); ;
-                    }
-                case bool _ when typeof(T) == typeof(int):
-                    {
-                        return Int32Tensor.From(array as int[], dimensions, requiresGrad);
-                    }
-                case bool _ when typeof(T) == typeof(long):
-                    {
-                        return Int64Tensor.From(array as long[], dimensions, requiresGrad);
-                    }
-                case bool _ when typeof(T) == typeof(double):
-                    {
-                        return Float64Tensor.From(array as double[], dimensions, requiresGrad);
-                    }
-                case bool _ when typeof(T) == typeof(float):
-                    {
-                        return Float32Tensor.From(array as float[], dimensions, requiresGrad);
-                    }
-                case bool _ when typeof(T) == typeof(bool):
-                    {
-                        return BoolTensor.From(array as bool[], dimensions, requiresGrad);
-                    }
-                //case bool _ when typeof(T) == typeof(System.Numerics.Complex):
-                //    {
-                //        return ComplexFloat64Tensor.From(array as System.Numerics.Complex[], dimensions, requiresGrad);
-                //    }
-                default: throw new NotImplementedException($"Creating tensor of type {typeof(T)} is not supported.");
+            switch (true) {
+            case bool _ when typeof(T) == typeof(byte): {
+                    return ByteTensor.From(array as byte[], dimensions, requiresGrad); ;
+                }
+            case bool _ when typeof(T) == typeof(sbyte): {
+                    return Int8Tensor.From(array as sbyte[], dimensions, requiresGrad); ;
+                }
+            case bool _ when typeof(T) == typeof(short): {
+                    return Int16Tensor.From(array as short[], dimensions, requiresGrad); ;
+                }
+            case bool _ when typeof(T) == typeof(int): {
+                    return Int32Tensor.From(array as int[], dimensions, requiresGrad);
+                }
+            case bool _ when typeof(T) == typeof(long): {
+                    return Int64Tensor.From(array as long[], dimensions, requiresGrad);
+                }
+            case bool _ when typeof(T) == typeof(double): {
+                    return Float64Tensor.From(array as double[], dimensions, requiresGrad);
+                }
+            case bool _ when typeof(T) == typeof(float): {
+                    return Float32Tensor.From(array as float[], dimensions, requiresGrad);
+                }
+            case bool _ when typeof(T) == typeof(bool): {
+                    return BoolTensor.From(array as bool[], dimensions, requiresGrad);
+                }
+            //case bool _ when typeof(T) == typeof(System.Numerics.Complex):
+            //    {
+            //        return ComplexFloat64Tensor.From(array as System.Numerics.Complex[], dimensions, requiresGrad);
+            //    }
+            default: throw new NotImplementedException($"Creating tensor of type {typeof(T)} is not supported.");
             }
         }
 
         public static TorchTensor ToTorchTensor<T>(this T scalar, DeviceType deviceType = DeviceType.CPU, int deviceIndex = 0, bool requiresGrad = false) where T : struct
         {
-            if (requiresGrad && typeof(T) != typeof(float) && typeof(T) != typeof(double))
-            {
+            if (requiresGrad && typeof(T) != typeof(float) && typeof(T) != typeof(double)) {
                 throw new ArgumentException(nameof(requiresGrad), "Only floating point types support gradients.");
             }
 
@@ -4520,12 +4479,10 @@ namespace TorchSharp.Tensor
 
         public static TorchTensor Cat(this TorchTensor[] tensors, long dimension)
         {
-            if (tensors.Length == 0)
-            {
+            if (tensors.Length == 0) {
                 throw new ArgumentException(nameof(tensors));
             }
-            if (tensors.Length == 1)
-            {
+            if (tensors.Length == 1) {
                 return tensors[0];
             }
 

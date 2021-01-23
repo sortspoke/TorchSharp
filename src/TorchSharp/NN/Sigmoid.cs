@@ -6,45 +6,45 @@ using TorchSharp.Tensor;
 namespace TorchSharp.NN
 {
     /// <summary>
-    /// This class is used to represent a ReLU module.
+    /// This class is used to represent a Sigmoid module.
     /// </summary>
-    public class Relu : Module
+    public class Sigmoid : Module
     {
-        internal Relu (IntPtr handle, IntPtr boxedHandle) : base (handle, boxedHandle) { }
+        internal Sigmoid (IntPtr handle, IntPtr boxedHandle) : base (handle, boxedHandle) { }
 
         [DllImport ("LibTorchSharp")]
-        private static extern IntPtr THSNN_ReLU_forward (Module.HType module, IntPtr tensor);
+        private static extern IntPtr THSNN_Sigmoid_forward (Module.HType module, IntPtr tensor);
 
         public TorchTensor Forward (TorchTensor tensor)
         {
-            var res = THSNN_ReLU_forward (handle, tensor.Handle);
+            var res = THSNN_Sigmoid_forward (handle, tensor.Handle);
             if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
             return new TorchTensor (res);
         }
 
         public override string GetName ()
         {
-            return typeof (Relu).Name;
+            return typeof (Sigmoid).Name;
         }
     }
 
     public static partial class Modules
     {
         [DllImport ("LibTorchSharp")]
-        extern static IntPtr THSNN_ReLU_ctor (bool inplace, out IntPtr pBoxedModule);
+        extern static IntPtr THSNN_Sigmoid_ctor (bool inplace, out IntPtr pBoxedModule);
 
-        static public Relu Relu(bool inPlace = false)
+        static public Sigmoid Sigmoid (bool inPlace = false)
         {
-            var handle = THSNN_ReLU_ctor (inPlace, out var boxedHandle);
+            var handle = THSNN_Sigmoid_ctor (inPlace, out var boxedHandle);
             if (handle == IntPtr.Zero) { Torch.CheckForErrors(); }
-            return new Relu (handle, boxedHandle);
+            return new Sigmoid (handle, boxedHandle);
         }
     }
     public static partial class Functions
     {
-        static public TorchTensor Relu (TorchTensor x, bool inPlace = false)
+        static public TorchTensor Sigmoid (TorchTensor x, bool inPlace = false)
         {
-            using (var m = Modules.Relu(inPlace)) {
+            using (var m = Modules.Sigmoid (inPlace)) {
                 return m.Forward (x);
             }
         }

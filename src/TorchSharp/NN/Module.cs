@@ -162,8 +162,7 @@ namespace TorchSharp.NN
                 strArray = sa.Array;
             }
             return ptrArray.Select((x, i) => (Marshal.PtrToStringAnsi(strArray[i]), new TorchTensor(x))).ToArray();
-
-    }
+        }
 
         [DllImport ("LibTorchSharp")]
         private static extern void THSNN_Module_get_parameters (HType module, AllocatePinnedArray allocator);
@@ -255,6 +254,16 @@ namespace TorchSharp.NN
         {
             THSNN_Module_to(handle, device, nonBlocking);
             Torch.CheckForErrors();
+        }
+
+        [DllImport("LibTorchSharp")]
+        private static extern IntPtr THSNN_Module_forward(BoxedModule.HType module, IntPtr input);
+
+        public TorchTensor ForwardBase(TorchTensor input)
+        {
+            var res = THSNN_Module_forward(boxedModule.handle, input.handle);
+            if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
+            return new TorchTensor(res);
         }
     }
 

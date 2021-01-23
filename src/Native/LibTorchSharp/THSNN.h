@@ -11,6 +11,7 @@
 
 EXPORT_API(int)         THSNN_Module_has_parameter(const NNModule module, const char* name);
 EXPORT_API(Tensor)      THSNN_Module_get_parameter(const NNModule module, const char* name);
+EXPORT_API(Tensor)      THSNN_Module_forward(const NNAnyModule module, Tensor input);
 EXPORT_API(void)        THSNN_Module_get_named_parameters(const NNModule module, Tensor* (*allocator1)(size_t length), const char** (*allocator2)(size_t length));
 EXPORT_API(void)        THSNN_Module_get_parameters(const NNModule module, Tensor* (*allocator1)(size_t length));
 EXPORT_API(int)         THSNN_Module_is_training(NNModule module);
@@ -58,8 +59,20 @@ EXPORT_API(void)     THSNN_Linear_set_weight(const NNModule module, const Tensor
 EXPORT_API(NNModule) THSNN_ReLU_ctor(bool inplace, NNAnyModule* outAsAnyModule);
 EXPORT_API(Tensor)   THSNN_ReLU_forward(const NNModule module, const Tensor tensor);
 
+EXPORT_API(NNModule) THSNN_ELU_ctor(NNAnyModule* outAsAnyModule);
+EXPORT_API(Tensor)   THSNN_ELU_forward(const NNModule module, const Tensor tensor);
+
+EXPORT_API(NNModule) THSNN_Sigmoid_ctor(bool inplace, NNAnyModule* outAsAnyModule);
+EXPORT_API(Tensor)   THSNN_Sigmoid_forward(const NNModule module, const Tensor tensor);
+
+EXPORT_API(NNModule) THSNN_Tanh_ctor(bool inplace, NNAnyModule* outAsAnyModule);
+EXPORT_API(Tensor)   THSNN_Tanh_forward(const NNModule module, const Tensor tensor);
+
 EXPORT_API(NNModule) THSNN_LogSoftMax_ctor(int64_t dim, NNAnyModule* outAsAnyModule);
 EXPORT_API(Tensor)   THSNN_LogSoftMax_forward(const NNModule module, const Tensor tensor);
+
+EXPORT_API(NNModule) THSNN_SoftMax_ctor(int64_t dim, NNAnyModule* outAsAnyModule);
+EXPORT_API(Tensor)   THSNN_SoftMax_forward(const NNModule module, const Tensor tensor);
 
 EXPORT_API(NNModule) THSNN_Sequential_ctor();
 EXPORT_API(void)     THSNN_Sequential_push_back(const NNModule module, const char* name, const NNAnyModule submodule);

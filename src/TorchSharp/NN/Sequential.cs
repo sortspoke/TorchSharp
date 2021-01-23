@@ -28,7 +28,7 @@ namespace TorchSharp.NN
             Torch.CheckForErrors ();
         }
 
-        internal Sequential (IntPtr handle) : base (handle, IntPtr.Zero)
+        internal Sequential (IntPtr handle, IntPtr boxedHandle) : base (handle, boxedHandle)
         {
         }
 
@@ -47,13 +47,13 @@ namespace TorchSharp.NN
     public static partial class Modules
     {
         [DllImport ("LibTorchSharp")]
-        extern static IntPtr THSNN_Sequential_ctor ();
+        extern static IntPtr THSNN_Sequential_ctor (out IntPtr pBoxedModule);
 
         static public Sequential Sequential (params (string name, Module submodule)[] modules)
         {
-            var handle = THSNN_Sequential_ctor ();
+            var handle = THSNN_Sequential_ctor (out var boxedHandle);
             if (handle == IntPtr.Zero) { Torch.CheckForErrors(); }
-            var res = new Sequential (handle);
+            var res = new Sequential (handle, boxedHandle);
             foreach (var module in modules)
                 res.Add(module.name, module.submodule);
             return res;
