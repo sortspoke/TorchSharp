@@ -14,6 +14,11 @@ EXPORT_API(int) THSTorchCuda_is_available();
 EXPORT_API(int) THSTorchCuda_cudnn_is_available();
 EXPORT_API(int) THSTorchCuda_device_count();
 
+//EXPORT_API(void) THSTorchCudaMemory_resetPeakStats(int device);
+//EXPORT_API(int64_t) THSTorchCudaMemory_getAllocatedBytes(int device);
+//EXPORT_API(int64_t) THSTorchCudaMemory_getMaxAllocatedBytes(int device);
+//EXPORT_API(void) THSTorch_synchronize();
+
 // Returns the latest error. This is thread-local.
 EXPORT_API(const char *) THSTorch_get_and_reset_last_err();
 

@@ -91,6 +91,7 @@ namespace TorchSharp.NN
                 handle.SetHandleAsInvalid ();
             }
         }
+
         [DllImport("LibTorchSharp")]
         extern static IntPtr THSNN_Module_load([MarshalAs(UnmanagedType.LPStr)] string location);
 
@@ -99,6 +100,14 @@ namespace TorchSharp.NN
             var handle = THSNN_Module_load (location);
             if (handle == IntPtr.Zero) { Torch.CheckForErrors(); }
             return new Module (handle, IntPtr.Zero);
+        }
+
+        [DllImport("LibTorchSharp")]
+        extern static IntPtr THSNN_Module_loadFrom(HType module, [MarshalAs(UnmanagedType.LPStr)] string location);
+
+        public virtual void LoadFrom (String location)
+        {
+            THSNN_Module_loadFrom(handle, location);
         }
 
         [DllImport ("LibTorchSharp")]
@@ -359,7 +368,7 @@ namespace TorchSharp.NN
             ForwardFunctionC forwardNative = t => (Forward (new TorchTensor (t)).Handle);
             var res = THSNN_custom_module (name, nparray, pparray, gparray, names.Length, forwardNative, out var boxedHandle);
             Torch.CheckForErrors ();
-            this.handle = new HType (res, true);
+            this.handle = new HType (res, true); 
             this.forwardNative = forwardNative;
             this.boxedModule = new BoxedModule(boxedHandle);
         }

@@ -7,10 +7,11 @@
 void THSNN_Module_save(const NNModule module, const char* location)
 {
     CATCH(
-        auto output = torch::serialize::OutputArchive();
+        //auto output = torch::serialize::OutputArchive();
+        torch::save(*module, location);
 
-        output.save_to(location);
-        (*module)->save(output);
+        //output.save_to(location);
+        //(*module)->save(output);
     );
 }
 
@@ -35,6 +36,16 @@ NNModule THSNN_Module_load(const char* location, const char* name)
         input.load_from(location);
         module->load(input);
         res = new std::shared_ptr<torch::nn::Module>(module);
+    );
+}
+
+void THSNN_Module_loadFrom(const NNModule module, const char* location)
+{
+    CATCH(
+        //auto input = torch::serialize::InputArchive();
+        torch::load(*module, location);
+        //input.load_from(location);
+        //(*module)->load(input);
     );
 }
 

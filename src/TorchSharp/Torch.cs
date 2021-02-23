@@ -190,6 +190,41 @@ namespace TorchSharp
             return THSTorchCuda_device_count();
         }
 
+        //[DllImport("LibTorchSharp")]
+        //private static extern void THSTorchCudaMemory_resetPeakStats(int device);
+
+        //public static void CudaResetPeakStats(int device)
+        //{
+        //    TryInitializeDeviceType(DeviceType.CUDA);
+        //    THSTorchCudaMemory_resetPeakStats(device);
+        //}
+
+        //[DllImport("LibTorchSharp")]
+        //private static extern long THSTorchCudaMemory_getAllocatedBytes(int device);
+
+        //public static long CudaGetAllocatedBytes(int device)
+        //{
+        //    TryInitializeDeviceType(DeviceType.CUDA);
+        //    return THSTorchCudaMemory_getAllocatedBytes(device);
+        //}
+
+        //[DllImport("LibTorchSharp")]
+        //private static extern long THSTorchCudaMemory_getMaxAllocatedBytes(int device);
+
+        //public static long CudaGetMaxAllocatedBytes(int device)
+        //{
+        //    TryInitializeDeviceType(DeviceType.CUDA);
+        //    return CudaGetMaxAllocatedBytes(device);
+        //}
+
+        ////[DllImport("LibTorchSharp")]
+        ////private static extern void THSTorch_synchronize();
+
+        ////public static void Synchronize()
+        ////{
+        ////    THSTorch_synchronize();
+        ////}
+
         [DllImport("LibTorchSharp")]
         private static extern IntPtr THSTorch_get_and_reset_last_err();
 

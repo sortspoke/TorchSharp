@@ -4,6 +4,9 @@
 #include "torch/torch.h"
 #include "torch/cuda.h"
 
+//#include <ATen/cuda/CUDAContext.h>
+//#include <c10/cuda/CUDACachingAllocator.h>
+
 void THSTorch_manual_seed(const int64_t seed)
 {
     torch::manual_seed(seed);
@@ -23,6 +26,30 @@ int THSTorchCuda_device_count()
 {
     return (int)torch::cuda::device_count();
 }
+//
+//c10::cuda::CUDACachingAllocator::DeviceStats THSTorchCudaMemory_getDeviceStats(int device)
+//{
+//    //at::cuda::getDeviceProperties(device);
+//    const c10::cuda::CUDACachingAllocator::DeviceStats stats = c10::cuda::CUDACachingAllocator::getDeviceStats(device);
+//    return stats;
+//}
+//
+//void THSTorchCudaMemory_resetPeakStats(int device)
+//{
+//    c10::cuda::CUDACachingAllocator::resetPeakStats(device);
+//}
+//
+//int64_t THSTorchCudaMemory_getAllocatedBytes(int device)
+//{
+//    const c10::cuda::CUDACachingAllocator::DeviceStats stats = THSTorchCudaMemory_getDeviceStats(device);
+//    return stats.allocated_bytes[0].current;
+//}
+//
+//int64_t THSTorchCudaMemory_getMaxAllocatedBytes(int device)
+//{
+//    const c10::cuda::CUDACachingAllocator::DeviceStats stats = THSTorchCudaMemory_getDeviceStats(device);
+//    return stats.allocated_bytes[0].peak;
+//}
 
 const char * THSTorch_get_and_reset_last_err()
 {

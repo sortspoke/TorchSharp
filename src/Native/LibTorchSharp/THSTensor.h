@@ -416,6 +416,8 @@ EXPORT_API(Tensor) THSTensor_indices(Tensor tensor);
 
 EXPORT_API(Tensor) THSTensor_index_select(Tensor tensor, int64_t dim, Tensor index);
 
+EXPORT_API(Tensor) THSTensor_index_fill(Tensor tensor, int64_t dim, Tensor index, const Scalar value);
+
 EXPORT_API(int) THSTensor_is_sparse(const Tensor tensor);
 
 EXPORT_API(Scalar) THSTensor_item(const Tensor tensor);
@@ -441,6 +443,8 @@ EXPORT_API(Tensor) THSTensor_lerp(const Tensor tensor, const Tensor end, const T
 EXPORT_API(Tensor) THSTensor_lerp_(const Tensor tensor, const Tensor end, const Tensor weight);
 
 EXPORT_API(Tensor) THSTensor_load(const char* location);
+
+EXPORT_API(void)   THSTensor_loadInto(Tensor tensor, const char* location);
 
 EXPORT_API(Tensor) THSTensor_log(const Tensor tensor);
 
@@ -816,6 +820,8 @@ EXPORT_API(Tensor) THSTensor_transpose(const Tensor tensor, const int64_t dim1, 
 EXPORT_API(Tensor) THSTensor_transpose_(const Tensor tensor, const int64_t dim1, const int64_t dim2);
 
 EXPORT_API(Tensor) THSTensor_to_dense(Tensor tensor);
+
+EXPORT_API(Tensor) THSTensor_to_sparse(Tensor tensor);
 
 EXPORT_API(Tensor) THSTensor_to_device(const Tensor tensor, const int device_type, const int device_index);
 

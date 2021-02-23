@@ -52,6 +52,7 @@ namespace TorchSharp.Tensor
             if (handle != IntPtr.Zero) {
                 THSTensor_dispose(handle);
                 handle = IntPtr.Zero;
+                //Console.WriteLine($"Disposing {this.ToString()} {DeviceString}");
             }
         }
 
@@ -92,6 +93,8 @@ namespace TorchSharp.Tensor
             if (NumberOfElements > int.MaxValue) {
                 throw new ArgumentException("Span only supports up to int.MaxValue elements.");
             }
+            if (DeviceType != DeviceType.CPU) throw new InvalidOperationException("Can only get a data pointer when tensor is on CPU");
+
             unsafe {
                 var res = THSTensor_data(handle);
                 if (res == IntPtr.Zero) { Torch.CheckForErrors(); }
@@ -362,6 +365,15 @@ namespace TorchSharp.Tensor
         }
 
         [DllImport("LibTorchSharp")]
+        private static extern IntPtr THSTensor_loadInto(IntPtr tensor, [MarshalAs(UnmanagedType.LPStr)] string location);
+
+        public void LoadInto(string location)
+        {
+            THSTensor_loadInto(handle, location);
+            Torch.CheckForErrors();
+        }
+
+        [DllImport("LibTorchSharp")]
         private static extern bool THSTensor_requires_grad(IntPtr handle);
 
         public bool IsGradRequired => THSTensor_requires_grad(handle);
@@ -501,6 +513,17 @@ namespace TorchSharp.Tensor
         }
 
         [DllImport("LibTorchSharp")]
+        private static extern IntPtr THSTensor_to_sparse(IntPtr handle);
+
+        public TorchTensor ToSparse()
+        {
+            var res = THSTensor_to_sparse(handle);
+            if (res == IntPtr.Zero)
+                Torch.CheckForErrors();
+            return new TorchTensor(res);
+        }
+
+        [DllImport("LibTorchSharp")]
         extern static IntPtr THSTensor_clone(IntPtr handle);
 
         public TorchTensor Clone()
@@ -539,6 +562,17 @@ namespace TorchSharp.Tensor
         public TorchTensor IndexSelect(long dimension, TorchTensor index)
         {
             var res = THSTensor_index_select(handle, dimension, index.Handle);
+            if (res == IntPtr.Zero)
+                Torch.CheckForErrors();
+            return new TorchTensor(res);
+        }
+
+        [DllImport("LibTorchSharp")]
+        private static extern IntPtr THSTensor_index_fill(IntPtr tensor, long dimension, IntPtr index, IntPtr value);
+
+        public TorchTensor IndexFill(long dimension, TorchTensor index, TorchScalar value)
+        {
+            var res = THSTensor_index_fill(handle, dimension, index.Handle, value.Handle);
             if (res == IntPtr.Zero)
                 Torch.CheckForErrors();
             return new TorchTensor(res);
@@ -4366,7 +4400,7 @@ namespace TorchSharp.Tensor
                     sb.Length = sb.Length - 1;
                     sb.Append("]");
                 } else if (n == 2) {
-                    for (var i = 0; i < GetTensorDimension(0); i++) {
+                    for (var i = 0; i < Math.Min(10, GetTensorDimension(0)); i++) {
                         sb.AppendLine();
                         sb.Append("[");
                         for (int j = 0; j < Math.Min(10, GetTensorDimension(1)); j++) {

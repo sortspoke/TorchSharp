@@ -1052,6 +1052,11 @@ Tensor THSTensor_index_select(Tensor tensor, int64_t dim, Tensor index)
     CATCH_TENSOR(tensor->index_select(dim, *index));
 }
 
+Tensor THSTensor_index_fill(Tensor tensor, int64_t dim, Tensor index, const Scalar value)
+{
+    CATCH_TENSOR(tensor->index_fill(dim, *index, *value));
+}
+
 Tensor THSTensor_indices(Tensor tensor)
 {
     CATCH_TENSOR(tensor->_indices());
@@ -1121,8 +1126,15 @@ Tensor THSTensor_load(const char* location)
 {
     CATCH_RETURN_Tensor(
         torch::Tensor tensor;
-    torch::load(tensor, location);
-    res = ResultTensor(tensor);
+        torch::load(tensor, location);
+        res = ResultTensor(tensor);
+    );
+}
+
+void THSTensor_loadInto(Tensor tensor, const char* location)
+{
+    CATCH(
+        torch::load(*tensor, location);
     );
 }
 
@@ -2259,11 +2271,16 @@ Tensor THSTensor_to_dense(Tensor tensor)
     CATCH_TENSOR(tensor->to_dense());
 }
 
+Tensor THSTensor_to_sparse(Tensor tensor)
+{
+    CATCH_TENSOR(tensor->to_sparse());
+}
+
 Tensor THSTensor_to_device(const Tensor tensor, const int device_type, const int device_index)
 {
     CATCH_RETURN_Tensor(
         auto device = c10::Device((c10::DeviceType)device_type, (c10::DeviceIndex)device_index);
-    res = ResultTensor(tensor->to(device));
+    res = ResultTensor(tensor->to(device, tensor->scalar_type(), true));
     );
 }
 
